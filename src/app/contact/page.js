@@ -597,8 +597,8 @@ function ContactForm() {
                 </button>
               </form>
               {responseMsg && (
-                <div className={`mt-4 p-3 rounded-md ${isSuccess ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
-                  <p className={`text-center ${isSuccess ? 'text-green-700' : 'text-red-600'} font-medium`}>
+                <div className={`mt-4 p-3 rounded-md ${isSuccess ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}>
+                  <p className={`text-center ${isSuccess ? "text-green-700" : "text-red-600"} font-medium`}>
                     {responseMsg}
                   </p>
                 </div>

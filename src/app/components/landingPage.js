@@ -276,7 +276,7 @@ if (resp.ok) {
 
   const prizeName = payload?.data?.data?.prize?.name;
   const hasWon = !!payload?.data?.data?.already_won;
-  setFinalPrizeName(prizeName)
+  setFinalPrizeName(prizeName);
 
   if (prizeName && Array.isArray(data)) {
     const index = data.findIndex(
@@ -298,7 +298,7 @@ if (resp.ok) {
         const hasWon = !!payload?.data?.data?.already_won;
         setFinalPrizeName(prizeName);
         setAlreadyWon(hasWon);
-        setJustValidated(false)
+        setJustValidated(false);
         if (prizeName && Array.isArray(data)) {
           const index = data.findIndex(
             (p) => (p?.option || p?.name || "").toLowerCase() === prizeName.toLowerCase()
@@ -534,7 +534,7 @@ const startingIndex = useMemo(
         spinDuration={0.6}
         pointerProps={{ style: { display: "none" } }}
         renderText={(option, index) => {
-          const lines = option.split('\n');
+          const lines = option.split("\n");
           return lines.map((line, lineIndex) => (
             <tspan key={lineIndex} x="0" dy={lineIndex === 0 ? "0" : "1.2em"}>
               {line}
