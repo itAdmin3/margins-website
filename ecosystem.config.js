@@ -6,7 +6,7 @@ module.exports = {
       args: "run dev",
       env: {
         NODE_ENV: "development",
-        PORT: 9000
+        PORT: 3000
       },
       watch: true,                    // auto-restart when files change (good for dev)
       ignore_watch: [
