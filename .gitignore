@@ -1,49 +1,93 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Node modules
+node_modules/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
+logs/
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# Build output
+.next/
+out/
+dist/
+coverage/
+storybook-static/
 
-# vercel
-.vercel
+# Next.js cache
+.next/
+.cache/
+.vercel/
 
-# typescript
+# Local environment variables
+.env
+.env.*.local
+
+# OS & system files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Editor / IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# PM2
+.pm2/
+
+# NPM cache
+.npm/
+
+# Yarn
+.yarn/
+.yarn-cache/
+yarn.lock  # only if your project uses npm instead of yarn
+
+# PNPM
+.pnpm-store/
+
+# Bash / user configs (should NEVER be in repo)
+.bash_history
+.bash_logout
+.bashrc
+.lesshst
+.profile
+.cloud-locale-test.skip
+
+# SSH keys
+.ssh/
+
+# Local app-specific folders
+margins-react-website/
+
+# ESLint configs (ignore only if auto-generated — if these are *your project* configs, keep them)
+.eslintrc.js
+.eslintrc.json
+
+# VSCode debug logs
 *.tsbuildinfo
-next-env.d.ts
 
-# local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
 
-.codegpt
+# Local system configs
+.config/
+.cache/
+
+# Misc dev tools
+.parcel-cache/
+.next-tmp/
+
+# MacOS metadata
+.AppleDouble
+.LSOverride
+
+# Linux / Ubuntu specific system files
+lost+found/

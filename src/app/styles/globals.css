@@ -70,6 +70,7 @@ body {
     sans-serif !important;
   font-size: 14px;
   letter-spacing: 1.5px;
+  overflow-x: hidden;
 }
 
 html[lang="ar"] {
@@ -234,4 +235,27 @@ textarea:focus {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #719ea1;
+}
+.wheelover > div:first-child {
+  pointer-events: none;
+  max-width: 600px;
+  max-height: 600px;
+
+}
+
+.wheelPointer {
+  pointer-events: none;
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(9px) translateY(-9px) scale(0.7);
+}
+
+@media (min-width: 426px) {
+  .wheelPointer {
+    transform: translateX(15px) translateY(-13px) scale(1) ;
+  }
 }

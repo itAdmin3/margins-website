@@ -49,7 +49,7 @@ export default function Header({ headerColor }) {
     { name: t("nav.news"), path: "/news" },
     { name: t("nav.careers"), path: "/careers" },
     { name: t("nav.brokers"), path: "/brokers" },
-    { name: t("nav.payment"), path: "/payment" },
+    { name: t("nav.payment"), path: "/pay" },
     { name: t("nav.contact"), path: "/contact" },
   ];
 

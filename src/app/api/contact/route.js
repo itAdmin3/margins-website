@@ -112,7 +112,7 @@ export async function POST(req) {
       "exhibition","facebook_outsource","facebook_comment","facebook_messages",
       "whatsapp_fb","google","snapchat","property_finder","tiktok","dubizzle",
       "telegram","cold_calls","aqar_map","bayut","data","personal_data","walking",
-      "newspaper","outdoor","whatsapp_web"];
+      "newspaper","outdoor","whatsapp_web", "sms"];
 
     const medium = allowedMediums.includes(body.medium) ? body.medium : "website";
 

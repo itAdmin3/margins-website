@@ -4,14 +4,12 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useRef, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Montserrat } from "next/font/google";
-import { Cairo } from "next/font/google";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { HiOutlineCheckCircle, HiOutlineXCircle } from "react-icons/hi";
 import { HiOutlineExclamationTriangle } from "react-icons/hi2";
-import { t } from "i18next";
 import { useTranslation } from "react-i18next";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 // Import the Wheel only on the client
 const Wheel = dynamic(
@@ -26,8 +24,8 @@ const Confetti = dynamic(() => import("react-confetti"), { ssr: false });
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
-  const [showPopup, setShowPopup] = useState(true);
-  const { t } = useTranslation("");
+  const [showPopup, setShowPopup] = useState(false);
+  const { i18n,  t } = useTranslation("");
   const [isValidated, setIsValidated] = useState(false);
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -43,7 +41,25 @@ export default function LandingPage() {
   const [prizesData, setPrizesData] = useState([]);
   const [isLoadingPrizes, setIsLoadingPrizes] = useState(true);
   const [prizesError, setPrizesError] = useState(null);
+  const [desiredPrizeIndex, setDesiredPrizeIndex] = useState(null);
+  const [finalPrizeName , setFinalPrizeName] = useState("")
+  const [alreadyWon, setAlreadyWon] = useState(false);
+  const [justValidated, setJustValidated] = useState(false); 
 
+// cookie helpers
+const setCookie = (name, value, days = 30) => {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+};
+const getCookie = (name) => {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(`${name}=`))
+    ?.split("=")[1];
+};
+// const eraseCookie = (name) => {
+//   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+// };
   // Refs to stabilize behavior during spin
   const mustSpinRef = useRef(false);
   useEffect(() => {
@@ -56,6 +72,7 @@ export default function LandingPage() {
 
   // Fetch prizes data from API
   useEffect(() => {
+    document.body.style.background = "#b7c1b9"; 
     const fetchPrizes = async () => {
       try {
         setIsLoadingPrizes(true);
@@ -109,66 +126,96 @@ export default function LandingPage() {
       });
     }
   };
-  const quickValidate = (countryCode, national) => {
-    return (
-      typeof countryCode === "string" &&
-      /^\+\d+$/.test(countryCode) &&
-      typeof national === "string" &&
-      /^\d{6,15}$/.test(national)
-    );
-  };
+const validatePhoneByCountry = (countryCode, national, iso2) => {
+  if (!countryCode || !national) return false;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Build an international (E.164) candidate
+  const e164Candidate = `${countryCode}${national}`; 
 
-    if (!userInfo.name.trim()) {
-      showNotification("error", t("landingPage.validEmail") );
-      return;
-    }
+  const phone = parsePhoneNumberFromString(e164Candidate);
+  if (!phone) return false;
 
-    if (!quickValidate(userInfo.countryCode, userInfo.phone)) {
-      showNotification("error",t("landingPage.validPhone") );
-      return;
-    }
+  // Ensures the number is valid overall and (optionally) for the selected region
+  if (!phone.isValid()) return false;
 
-    setIsSubmitting(true);
+  // If we know the 2-letter ISO (e.g. 'sa', 'eg'), ensure it matches
+  if (iso2 && phone.country && phone.country !== iso2.toUpperCase()) return false;
 
-    try {
-      const countryCode = userInfo.countryCode;
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+  return true;
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!userInfo.name.trim()) {
+    showNotification("error", t("landingPage.validEmail"));
+    return;
+  }
+
+  if (!validatePhoneByCountry(userInfo.countryCode, userInfo.phone, userInfo.iso2)) {
+  showNotification("error", t("landingPage.validPhone")); // “Please enter a valid phone number”
+  return;
+}
+
+  setIsSubmitting(true);
+
+  try {
+    const countryCode = userInfo.countryCode;
+    const response = await fetch("/api/prizes-winners", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: userInfo.name,
+        phone: userInfo.phone,
+        country: countryCode || "+966",
+      }),
+    });
+
+    if (response.ok) {
+      const payload = await response.json();
+      setCookie(
+        "prizeValidation",
+        JSON.stringify({
           name: userInfo.name,
           phone: userInfo.phone,
           country: countryCode || "+966",
-          unitType: " ",
-          message: " ",
         }),
-      });
-
-      if (response.ok) {
-        showNotification(
-          "success",
-          t("landingPage.validSucc") 
-          // "Validation successful! You can now spin the wheel."
+        30
+      );
+      showNotification("success", t("landingPage.validSucc"));
+      setIsValidated(true);
+      setShowPopup(false);
+      setUserInfo({ name: "", phone: "" });
+      setJustValidated(true);
+      // Extract prize name and set desired index by name
+      const prizeName = payload?.data?.data?.prize?.name;
+      setFinalPrizeName(prizeName);
+      if (prizeName && Array.isArray(data)) {
+        const index = data.findIndex(
+          (p) => (p?.option || p?.name || "").toLowerCase() === prizeName.toLowerCase()
         );
-        setIsValidated(true);
-        setShowPopup(false);
-        setUserInfo({ name: "", phone: "" });
-      } else {
-      showNotification("error", t("landingPage.validFailed"));
+        if (index !== -1) {
+          setDesiredPrizeIndex(index);
+          // Start spinning immediately after validation
+          hasStoppedRef.current = false;
+          setPrizeNumber(index);
+          setMustSpin(true);
+        }
       }
-    } catch (error) {
-      console.error("Error:", error);
-      showNotification("error",t("landingPage.validError"));
-    } finally {
-      setIsSubmitting(false);
+      const hasWon = !!payload?.data?.data?.already_won;
+      setAlreadyWon(hasWon);
+    } else {
+      showNotification("error", t("landingPage.validFailed"));
     }
-  };
-
+  } catch (error) {
+    console.error("Error:", error);
+    showNotification("error", t("landingPage.validError"));
+  } finally {
+    setIsSubmitting(false);
+  }
+};
   const openPopup = () => {
     if (!isValidated) {
       setShowPopup(true);
@@ -184,13 +231,98 @@ export default function LandingPage() {
       openPopup();
       return;
     }
+   if (alreadyWon && !justValidated) {
+    setMustSpin(false);
+    setShowResult(true); // just show the congrats modal
+    return;
+  }
 
-    // Pick prize and start spin (ensure order and guards)
-    const segmentIndex = Math.floor(Math.random() * data.length);
-    hasStoppedRef.current = false;
-    setPrizeNumber(segmentIndex);
-    setMustSpin(true);
+
+
+  hasStoppedRef.current = false;
+  setPrizeNumber(desiredPrizeIndex);
+  setMustSpin(true);
   };
+
+useEffect(() => {
+  // wait until prizes are loaded so we can map prize name -> index reliably
+  if (!mounted || isLoadingPrizes) return;
+
+  const raw = getCookie("prizeValidation");
+  if (!raw) return;
+
+  let saved;
+  try {
+    saved = JSON.parse(decodeURIComponent(raw));
+  } catch {
+    return;
+  }
+  if (!saved?.name || !saved?.phone || !saved?.country) return;
+
+  (async () => {
+    try {
+      const resp = await fetch("/api/prizes-winners", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: saved.name,
+          phone: saved.phone,
+          country: saved.country,
+        }),
+      });
+      const payload = await resp.json();
+if (resp.ok) {
+  setIsValidated(true);
+
+  const prizeName = payload?.data?.data?.prize?.name;
+  const hasWon = !!payload?.data?.data?.already_won;
+  setFinalPrizeName(prizeName)
+
+  if (prizeName && Array.isArray(data)) {
+    const index = data.findIndex(
+      (p) => (p?.option || p?.name || "").toLowerCase() === prizeName.toLowerCase()
+    );
+    if (index !== -1) {
+      setDesiredPrizeIndex(index);
+
+      if (hasWon) {
+        // No spin needed: wheel renders at the correct slice via startingOptionIndex
+        setShowResult(true); // show the congrats popup
+      }
+    }
+  }
+}
+      if (resp.ok) {
+        setIsValidated(true);
+        const prizeName = payload?.data?.data?.prize?.name;
+        const hasWon = !!payload?.data?.data?.already_won;
+        setFinalPrizeName(prizeName);
+        setAlreadyWon(hasWon);
+        setJustValidated(false)
+        if (prizeName && Array.isArray(data)) {
+          const index = data.findIndex(
+            (p) => (p?.option || p?.name || "").toLowerCase() === prizeName.toLowerCase()
+          );
+          if (index !== -1) setDesiredPrizeIndex(index);
+        }
+
+        // if (hasWon) {
+        //   showNotification("success", t("landingPage.validSucc"));
+        // }
+      }
+    } catch (err) {
+      console.error("Error re-checking prize status:", err);
+    }
+  })();
+}, [mounted, isLoadingPrizes, data]);
+const startingIndex = useMemo(
+  () =>
+    alreadyWon && !justValidated &&
+    typeof desiredPrizeIndex === "number" && desiredPrizeIndex >= 0
+      ? desiredPrizeIndex
+      : undefined,
+  [alreadyWon, justValidated, desiredPrizeIndex]
+);
   const textVariants = {
     hidden: { opacity: 0, y: 100 },
     visible: { opacity: 1, y: 0 },
@@ -350,7 +482,7 @@ export default function LandingPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="min-h-fit text-white font-medium py-2 px-16 shadow-sm bg-[#2E4649] focus:ring-2 focus:ring-teal-400 cursor-pointer"
+                  className="min-h-fit h-auto text-white font-medium py-2 px-5 shadow-sm bg-[#2E4649] focus:ring-2 focus:ring-teal-400 cursor-pointer"
                 >
                   {isSubmitting
                     ? t("landingPage.Submitting")
@@ -362,94 +494,132 @@ export default function LandingPage() {
         </div>
       )}
 
-      {/* Wheel Component */}
-      <div className="flex flex-col items-center gap-4 p-6 mt-[150px] mb-[90px]">
-        {isLoadingPrizes ? (
-          <div
-            className="flex flex-col items-center justify-center"
-            style={{ width: 360, height: 360 }}
-          >
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2E4649]"></div>
-            <p className="mt-4 text-gray-600">
-              {t("landingPage.LoadingPrizes") || "Loading prizes..."}
-            </p>
-          </div>
-        ) : mounted && data.length > 0 ? (
-          <Wheel
-            mustStartSpinning={mustSpin}
-            prizeNumber={prizeNumber}
-            data={data}
-            onStopSpinning={() => {
-              hasStoppedRef.current = true;
-              setMustSpin(false);
-              setShowResult(true);
-            }}
-            // onStopSpinning={() => setMustSpin(false)}
-            backgroundColors={["#E9ECEA", "#95A297"]}
-            textColors={["#173235", "#F4F5F4"]}
-            outerBorderColor="#333"
-            outerBorderWidth={8}
-            innerRadius={5}
-            innerBorderColor="#333"
-            innerBorderWidth={4}
-            radiusLineColor="#fff"
-            radiusLineWidth={2}
-            textDistance={70}
-            spinDuration={0.6}
+ {/* Wheel Component */}
+<div className="flex flex-col items-center gap-4 p-6 mt-[150px] mb-[90px] max:w-[100vw] overflow-hidden">
+  {isLoadingPrizes ? (
+    <div
+      className="flex flex-col items-center justify-center"
+      style={{ width: 420, height: 420 }}
+    >
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2E4649]"></div>
+      <p className="mt-4 text-gray-600">
+        {/* {t("landingPage.LoadingPrizes") || "Loading prizes..."} */}
+      </p>
+    </div>
+  ) : mounted && data.length > 0 ? (
+    <div className="relative wheelover rotate-[133deg] pointer-events-none" dir="ltr">
+      <Wheel
+        mustStartSpinning={mustSpin}
+        prizeNumber={prizeNumber}
+        data={data}
+        startingOptionIndex={startingIndex}
+        onStopSpinning={() => {
+          hasStoppedRef.current = true;
+          setMustSpin(false);
+          setAlreadyWon(true);   
+          setJustValidated(false);
+          setShowResult(true);
+        }}
+        backgroundColors={["#163235", "#b7c1b9"]}
+        textColors={["#ffff", "#163235"]}
+        fontSize={12}
+        outerBorderColor="#163235"
+        outerBorderWidth={8}
+        innerRadius={8}
+        innerBorderColor="#333"
+        innerBorderWidth={5}
+        radiusLineColor="rgba(255, 255, 255, 0.3)"
+        radiusLineWidth={2}
+        textDistance={55}
+        spinDuration={0.6}
+        pointerProps={{ style: { display: "none" } }}
+        renderText={(option, index) => {
+          const lines = option.split('\n');
+          return lines.map((line, lineIndex) => (
+            <tspan key={lineIndex} x="0" dy={lineIndex === 0 ? "0" : "1.2em"}>
+              {line}
+            </tspan>
+          ));
+        }}
+      />
+      <div className="wheelPointer pointer-events-none absolute z-9 inset-0 flex items-center justify-center rotate-[0]">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="380 245 40 70"
+          width="80"
+          height="80"
+          style={{ transform: 'rotate(-132deg)' }}
 
-            // pointerProps={{
-            // src: '/pointer.svg',
-
-            // }}
-          />
-        ) : (
-          <div
-            className="flex flex-col items-center justify-center"
-            style={{ width: 360, height: 360 }}
-          >
-            <div className="text-center">
-              <p className="text-red-600 mb-2">
-                {t("landingPage.PrizesError") || "Failed to load prizes"}
-              </p>
-              {prizesError && (
-                <p className="text-sm text-gray-500">{prizesError}</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        <motion.button
-          className={`mt-4 px-8 py-0 rounded text-white cursor-pointer ${
-            isValidated && !isLoadingPrizes
-              ? "bg-[#2E4649] hover:bg-[#1e3d40]"
-              : "bg-gray-400 cursor-not-allowed"
-          }`}
-          onClick={handleSpinClick}
-          disabled={mustSpin || isLoadingPrizes || data.length === 0}
-          variants={textVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.4 }}
         >
-          {isLoadingPrizes
-            ? t("landingPage.LoadingPrizes") || "Loading prizes..."
-            : isValidated
-            ? t("landingPage.spin")
-            : t("landingPage.validateToSpin")}
-        </motion.button>
-
-        {!isValidated && (
-          <motion.p
-            className="text-sm text-gray-600 text-center"
-            variants={textVariants}
-            initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.4, delay: 0.2 }}
-          >
-            {t("landingPage.pleaseValidate")}
-          </motion.p>
+          <g>
+            <path
+              d="M416.25,264.9l-16.26,41.63-16.21-41.5c4.44-.87,9.92-1.58,16.21-1.61,6.31-.03,11.81.64,16.26,1.47Z"
+              fill="#fff"
+            />
+            <circle xmlns="http://www.w3.org/2000/svg" className="st6" cx="399.99" cy="263.43" r="16.26" fill="#b7c1b9"/>
+            <circle cx="399.99" cy="263.43" r="2.96" fill="#163235" />
+          </g>
+        </svg>
+        
+      </div>
+    </div>
+  ) : (
+    <div
+      className="flex flex-col items-center justify-center"
+      style={{ width: 360, height: 360 }}
+    >
+      <div className="text-center">
+        <p className="text-red-600 mb-2">
+          {t("landingPage.PrizesError") || "Failed to load prizes"}
+        </p>
+        {prizesError && (
+          <p className="text-sm text-gray-500">{prizesError}</p>
         )}
       </div>
+    </div>
+  )}
+
+  <motion.button
+    className={`mt-4 px-8 py-0 rounded text-white cursor-pointer p-8 flex justify-center items-center text-xl ${
+      isValidated && !isLoadingPrizes && !alreadyWon
+        ? "bg-[#2E4649] hover:bg-[#1e3d40]"
+        : "bg-[#2E4649] cursor-not-allowed"
+    }`}
+    onClick={handleSpinClick}
+    disabled={mustSpin || isLoadingPrizes || data.length === 0 }
+    variants={textVariants}
+    initial="hidden"
+    animate="visible"
+    transition={{ duration: 0.4 }}
+  >
+    {isLoadingPrizes
+      ? t("landingPage.LoadingPrizes") || "Loading prizes..."
+      : isValidated
+      ? t("landingPage.spin")
+      : t("landingPage.validateToSpin")}
+  </motion.button>        
+  {!isValidated && (
+    <motion.p
+      className="text-sm text-gray-600 text-center"
+      variants={textVariants}
+      initial="hidden"
+      animate="visible"
+      transition={{ duration: 0.4, delay: 0.2 }}
+    >
+      {t("landingPage.pleaseValidate")}
+    </motion.p>
+  )}
+  {alreadyWon && finalPrizeName && (
+    <p className="text-sm text-[#173235] text-center mt-2">
+      {t("landingPage.congratulations")} {t("landingPage.congratulationsMessage")}
+      <span className="font-semibold"> {finalPrizeName}</span>!
+      <br/>
+      <span className="text-[#173235]/80 font-bold my-2">
+        {t("landingPage.claimInstructions")}
+      </span>
+    </p>
+  )}
+</div>
       <AnimatePresence>
         {showResult && (
           <>
@@ -477,8 +647,8 @@ export default function LandingPage() {
                 <p className="text-[#173235]/80">
                   {t("landingPage.congratulationsMessage")}
                   <span className="font-semibold">
-                    {data[prizeNumber]?.option}
-                  </span>
+                      {finalPrizeName}
+                       </span>
                   !
                 </p>
                 <p className="text-[#173235]/80 font-bold my-2">

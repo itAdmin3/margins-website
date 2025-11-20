@@ -52,7 +52,7 @@ export default function Pay() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        amount: parseFloat(paymentAmount / 100),
+        amount: parseFloat(paymentAmount),
         id: new String(reference),
         description: paymentReason,
         currency: "EGP",
@@ -312,7 +312,7 @@ export default function Pay() {
         </main>
       </div>
 
-      <Script src="https://ap-gateway.mastercard.com/static/checkout/checkout.min.js" strategy="lazyOnload" onLoad={() => {
+      <Script src="https://fabmisr.gateway.mastercard.com/static/checkout/checkout.min.js" strategy="lazyOnload" onLoad={() => {
         console.log("MC Loaded.")
         
         }} />

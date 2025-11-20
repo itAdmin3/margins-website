@@ -72,7 +72,7 @@
     "landingPage":{
       "pleaseValidate": "Please validate your information first to spin the wheel",
       "spin": "Spin",
-      "validateToSpin": "Validate to Spin",
+      "validateToSpin": "Validate to Spin The Wheel",
       "Submitting": "Submitting...",
       "phone":"Your phone",
       "name":"Your name",
@@ -84,9 +84,10 @@
       "close":"Close",
       "validEmail":"Please enter a valid email",
       "validPhone":"Please enter a valid phone number",
-      "validSucc":"Validation successful! You can now spin the wheel.",
+      "validSucc":"Validation successful!",
       "validFailed":"Validation failed. Please try again.",
-      "validError":"An error occurred. Please try again."
+      "validError":"An error occurred. Please try again.",
+      "LoadingPrizes":"Loading prizes..."
     },
     "footer": {
       "contactUs": "Contact Us",

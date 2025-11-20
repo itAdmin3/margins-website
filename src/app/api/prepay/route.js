@@ -16,34 +16,41 @@ export async function POST(req) {
       }
     });
     const fabmisrConfig = (await fabmisrConfigReq.json()).data;
+    const _body = JSON.stringify(
+        {
+          "apiOperation": "INITIATE_CHECKOUT",
+          "interaction":{
+            "operation" :"PURCHASE",
+            "merchant": {
+              // "id": fabmisrConfig.MerchantID,
+              "name": fabmisrConfig.MerchantName,
+              // "url": "https://marginsdevelopments.com"
+            },
+            "returnUrl": "https://marginsdevelopments.com/postpay"
+          },
+          "order": order,
+        }
+      );
+    
     console.log(fabmisrConfig);
     console.log(base64("merchant." + fabmisrConfig.MerchantID + ":" + fabmisrConfig.Key1));
-    const response = await fetch(`https://ap-gateway.mastercard.com/api/rest/version/100/merchant/${fabmisrConfig.MerchantID}/session`, {
-    // const response = await fetch(`https://fabmisr-gateway.mastercard.com/api/rest/version/100/merchant/${fabmisrConfig.MerchantID}/session`, {
+    console.log(`URL: https://ap-gateway.mastercard.com/api/rest/version/100/merchant/${fabmisrConfig.MerchantID}/session`);
+    console.log(_body);
+
+    // const response = await fetch(`https://ap-gateway.mastercard.com/api/rest/version/100/merchant/${fabmisrConfig.MerchantID}/session`, {
+    const response = await fetch(`https://fabmisr.gateway.mastercard.com/api/rest/version/100/merchant/${fabmisrConfig.MerchantID}/session`, {
 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Basic ${base64("merchant." + fabmisrConfig.MerchantID + ":" + fabmisrConfig.Key1)}`,
       },
-      body: JSON.stringify(
-        {
-          apiOperation: "INITIATE_CHECKOUT",
-          "interaction":{
-            "operation" :"PURCHASE",
-            "merchant": {
-              // "id": fabmisrConfig.MerchantID,
-              "name": fabmisrConfig.MerchantName,
-              "url": "https://marginsdevelopments.com"
-            },
-            "returnUrl": "https://marginsdevelopments.com/prepay/return"
-          },
-          "order": order,
-        }
-      ),
+      body: _body,
     });
 
     const responseData = await response.json();
+
+    console.log("Response from payment gateway:", responseData);
 
     if (!response.ok) {
       return Response.json({ message: "Failed to initiate payment session", error: responseData }, { status: response.status });
