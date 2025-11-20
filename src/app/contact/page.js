@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
@@ -17,23 +17,54 @@ import { LiaMapMarkerAltSolid } from "react-icons/lia";
 import SocialLinks from "../../app/components/socialLinks";
 
 export default function Contact() {
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     phone: "",
     unitType: "Unit Type",
     message: "",
     country: "20",
+    medium: "",
   });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[0-9]{6,15}$/;
+    return phoneRegex.test(phone);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate email (only if provided)
+    if (formData.email && !validateEmail(formData.email)) {
+      setResponseMsg("Please enter a valid email address.");
+      setIsSuccess(false);
+      return;
+    }
+
+    // Validate phone
+    if (!validatePhone(formData.phone)) {
+      setResponseMsg("Please enter a valid phone number (6-15 digits).");
+      setIsSuccess(false);
+      return;
+    }
+
     setLoading(true);
+    setResponseMsg("");
+    setIsSuccess(false);
 
     try {
       const response = await fetch("/api/contact", {
@@ -42,14 +73,28 @@ export default function Contact() {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        setResponseMsg("Thank you for reaching out to us! Our team will contact you shortly.");
+        setResponseMsg("✓ Thank you for reaching out! Our team will contact you shortly.");
+        setIsSuccess(true);
         e.target.reset();
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          unitType: "Unit Type",
+          message: "",
+          country: "20",
+          medium: formData.medium,
+        });
       } else {
-        setResponseMsg("Failed to send message. Please try later.");
+        setResponseMsg(data.error || data.message || "Failed to send message. Please try later.");
+        setIsSuccess(false);
       }
     } catch (error) {
       setResponseMsg("Failed to send message. Please try later.");
+      setIsSuccess(false);
     }
     setLoading(false);
   };
@@ -68,7 +113,20 @@ export default function Contact() {
       title: "Contact Us | Margins Developments",
       description: "Welcome to the home page of my awe-inspiring Next.js application!",
     });
-  }, [setMetadata]);
+    
+    // Capture medium query parameter
+    const allowedMediums = ["banner","direct","email","facebook_lead_generation",
+      "google_adwords","linkedin","phone","television","twitter","website",
+      "word_of_mouth","instagram","insource","outsource","outsource_m_y",
+      "exhibition","facebook_outsource","facebook_comment","facebook_messages",
+      "whatsapp_fb","google","snapchat","property_finder","tiktok","dubizzle",
+      "telegram","cold_calls","aqar_map","bayut","data","personal_data","walking",
+      "newspaper","outdoor","whatsapp_web"];
+
+    const mediumParam = searchParams.get('medium');
+    const validMedium = allowedMediums.includes(mediumParam) ? mediumParam : "website";
+    setFormData(prev => ({ ...prev, medium: validMedium }));
+  }, [setMetadata, searchParams]);
 
   if (!hydrated) {
     return null;
@@ -186,7 +244,8 @@ export default function Contact() {
                 Get in Touch
               </motion.h2>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <input type="text" name="name" onChange={handleChange} placeholder="Your name" required className="mt-1 w-full border-b border-gray-300 focus:outline-hidden focus:border-teal-800" />
+                <input type="text" name="name" onChange={handleChange} value={formData.name} placeholder="Your name" required className="mt-1 w-full border-b border-gray-300 focus:outline-hidden focus:border-teal-800" />
+                <input type="email" name="email" onChange={handleChange} value={formData.email} placeholder="Your email (optional)" className="mt-1 w-full border-b border-gray-300 focus:outline-hidden focus:border-teal-800" />
                 <div className="flex space-x-3">
                   <select id="country" name="country" onChange={handleChange} className="mt-1 w-full border-b border-gray-300 focus:outline-hidden focus:border-teal-800 text-black" placeholder="Country" defaultValue="20">
                     <option data-countrycode="" value="">
@@ -523,21 +582,27 @@ export default function Contact() {
                       Other
                     </option>
                   </select>
-                  <input type="number" name="phone" onChange={handleChange} placeholder="Your phone" required className="mt-1 w-full border-b border-gray-300 focus:outline-hidden focus:border-teal-800" />
+                  <input type="tel" name="phone" onChange={handleChange} value={formData.phone} placeholder="Your phone" required className="mt-1 w-full border-b border-gray-300 focus:outline-hidden focus:border-teal-800" />
                 </div>
-                <select name="unitType" onChange={handleChange} className="mt-1 w-full border-b border-gray-300 focus:outline-hidden focus:border-teal-800" defaultValue="Unit type">
+                <select name="unitType" onChange={handleChange} value={formData.unitType} className="mt-1 w-full border-b border-gray-300 focus:outline-hidden focus:border-teal-800">
                   <option value="Unit type">Unit type</option>
                   <option value="Administrative unit">Administrative unit</option>
                   <option value="Commercial unit">Commercial unit</option>
                   <option value="Medical unit">Medical unit</option>
                   <option value="Residential unit">Residential unit</option>
                 </select>
-                <textarea name="message" onChange={handleChange} placeholder="Your message" required rows="4" className="mt-1 w-full border-b border-gray-300 focus:outline-hidden focus:border-teal-800"></textarea>
+                <textarea name="message" onChange={handleChange} value={formData.message} placeholder="Your message" required rows="4" className="mt-1 w-full border-b border-gray-300 focus:outline-hidden focus:border-teal-800"></textarea>
                 <button type="submit" className="btn-primary text-white font-medium py-2 px-16 shadow-sm hover:bg-black focus:outline-hidden focus:ring-2 focus:ring-teal-400">
                   {loading ? "Sending..." : "Send"}
                 </button>
               </form>
-              {responseMsg && <p className="text-center text-red-500 mt-2">{responseMsg}</p>}
+              {responseMsg && (
+                <div className={`mt-4 p-3 rounded-md ${isSuccess ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
+                  <p className={`text-center ${isSuccess ? 'text-green-700' : 'text-red-600'} font-medium`}>
+                    {responseMsg}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
