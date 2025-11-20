@@ -72,7 +72,7 @@ export default function Pay() {
           Checkout.showPaymentPage();
         }
       }
-    )
+    );
 
 
     // SimplifyCommerce.hostedPayments(
@@ -313,7 +313,7 @@ export default function Pay() {
       </div>
 
       <Script src="https://fabmisr.gateway.mastercard.com/static/checkout/checkout.min.js" strategy="lazyOnload" onLoad={() => {
-        console.log("MC Loaded.")
+        console.log("MC Loaded.");
         
         }} />
       <button id="handlerButton" data-sc-key="lvpb_OTk5YTFmZjktZDFhOC00MTA1LWI3NjQtZmJlNTI3ZGI1N2Qz" data-amount="500000" data-color="#0798a7" style={{ width: 0, padding: "0 !important", opacity: 0 }}></button>

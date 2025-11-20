@@ -42,7 +42,7 @@ export default function LandingPage() {
   const [isLoadingPrizes, setIsLoadingPrizes] = useState(true);
   const [prizesError, setPrizesError] = useState(null);
   const [desiredPrizeIndex, setDesiredPrizeIndex] = useState(null);
-  const [finalPrizeName , setFinalPrizeName] = useState("")
+  const [finalPrizeName , setFinalPrizeName] = useState("");
   const [alreadyWon, setAlreadyWon] = useState(false);
   const [justValidated, setJustValidated] = useState(false); 
 
@@ -548,7 +548,7 @@ const startingIndex = useMemo(
           viewBox="380 245 40 70"
           width="80"
           height="80"
-          style={{ transform: 'rotate(-132deg)' }}
+          style={{ transform: "rotate(-132deg)" }}
 
         >
           <g>

@@ -1,7 +1,7 @@
 import { base } from "framer-motion/client";
 
 function base64(str) {
-  return Buffer.from(str).toString('base64');
+  return Buffer.from(str).toString("base64");
 }
 
 export async function POST(req) {

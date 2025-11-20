@@ -123,7 +123,7 @@ function ContactForm() {
       "telegram","cold_calls","aqar_map","bayut","data","personal_data","walking",
       "newspaper","outdoor","whatsapp_web", "sms"];
 
-    const mediumParam = searchParams.get('medium');
+    const mediumParam = searchParams.get("medium");
     const validMedium = allowedMediums.includes(mediumParam) ? mediumParam : "website";
     setFormData(prev => ({ ...prev, medium: validMedium }));
   }, [setMetadata, searchParams]);
