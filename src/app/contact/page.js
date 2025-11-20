@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Head from "next/head";
 import Image from "next/image";
@@ -16,7 +16,7 @@ import { PiPhoneThin } from "react-icons/pi";
 import { LiaMapMarkerAltSolid } from "react-icons/lia";
 import SocialLinks from "../../app/components/socialLinks";
 
-export default function Contact() {
+function ContactForm() {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
@@ -620,5 +620,13 @@ export default function Contact() {
       <SocialLinks />
       <Footer />
     </div>
+  );
+}
+
+export default function Contact() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ContactForm />
+    </Suspense>
   );
 }
