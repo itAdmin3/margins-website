@@ -1,0 +1,14 @@
+.wrapper {
+  .brokers-area-link {
+    padding-left: 20px;
+    padding-left: 20px;
+    transition: all ease 0.4s;
+    &:hover {
+      background-color: var(--pcolor2, #8aa6a8);
+      padding-left: 30px;
+      padding-right: 30px;
+      color: #ffffff;
+      text-decoration: none;
+    }
+  }
+}

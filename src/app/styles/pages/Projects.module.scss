@@ -1,0 +1,62 @@
+.wrapper {
+    background-color: var(--pcolor2, #8aa6a8);
+
+      .bg-overlay {
+        position: absolute;
+        top: 57%;
+        width: max-content;
+        .text {
+          font-size: 145px;
+          opacity: 0.07;
+          animation: rotateText 1.5s ease-in-out;
+          animation-delay: 0.8s;
+          transform-origin: center;
+          text-transform: uppercase;
+          backface-visibility: hidden;
+          transition-property: transform;
+        }
+      }
+    
+      .bg-line {
+        background-color: #8aa6a8;
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        top: 66%;
+        animation: slideDown 0.7s ease-in-out;
+        animation-delay: 0.7s;
+        &:after {
+          background-color: #8aa6a8;
+          width: 1px;
+          height: 42vh;
+          position: absolute;
+          top: 0px;
+          left: 50%;
+          content: "";
+        }
+      }
+}
+
+@keyframes slideDown {
+  0% {
+    top: 30%;
+    opacity: 0;
+  }
+
+  100% {
+    top: 66%;
+    opacity: 1;
+  }
+}
+
+@keyframes rotateText {
+  0% {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+
+  100% {
+    transition: rotateX(0);
+    opacity: 0.08;
+  }
+}

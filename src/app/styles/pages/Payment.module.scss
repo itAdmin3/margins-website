@@ -1,0 +1,38 @@
+.wrapper {
+  .logo {
+    width: 190px;
+    display: flex;
+  }
+  .proceed-payment-btn {
+    text-align: center;
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+    background-color: var(--pcolor2, #6b8d90);
+    color: #ffffff;
+    font-size: 1.1em;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-top-right-radius: 12px;
+    transition: all 0.4s;
+    &:hover {
+      background-color: var(--pcolor1, #6b8d90);
+    }
+  }
+  .back-to-website-link {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    transition: all ease 0.4s;
+    color: #000000;
+    display: inline-flex;
+    &:hover {
+      background-color: var(--pcolor2, #8aa6a8);
+      padding-left: 30px;
+      padding-right: 30px;
+      color: #ffffff;
+      text-decoration: none;
+    }
+  }
+}

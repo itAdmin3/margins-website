@@ -1,0 +1,48 @@
+.wrapper {
+  .image {
+    animation: scaleDown 1s ease-in-out;
+    animation-delay: 0.5s;
+    height: 100vh;
+  }
+  .logo {
+    transform: scale(1.1);
+    animation: scaleUp 1s ease-in-out;
+    animation-delay: 0.5s;
+  }
+  .share-post-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: #efefef;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 50px;
+    flex-direction: column;
+    line-height: 1;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    top: 70px;
+    p {
+        writing-mode: vertical-rl;
+    }
+  }
+}
+
+@keyframes scaleDown {
+  0% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
+}

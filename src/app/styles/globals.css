@@ -1,0 +1,237 @@
+@import 'tailwindcss';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+:root {
+  --pcolor0: #ffffff;
+  --pcolor1: #6b8d90;
+  --pcolor2: #8aa6a8;
+  --pcolor3: #2b2e34;
+}
+
+@font-face {
+  font-family: "Brixton Light";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Brixton-Light"),
+    url("/fonts/brixton/Brixton-Light.woff2") format("woff2"),
+    url("/fonts/brixton/Brixton-Light.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Brixton Medium";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Brixton-Medium"),
+    url("/fonts/brixton/Brixton-Medium.woff2") format("woff2"),
+    url("/fonts/brixton/Brixton-Medium.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Brixton Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Brixton-Bold"),
+    url("/fonts/brixton/Brixton-Bold.woff2") format("woff2"),
+    url("/fonts/brixton/Brixton-Bold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Brixton Book";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Brixton-Book"),
+    url("/fonts/brixton/Brixton-Book.woff2") format("woff2"),
+    url("/fonts/brixton/Brixton-Book.woff") format("woff");
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family:"Brixton Light", "Cairo", Inter, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    sans-serif !important;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+}
+
+html[lang="ar"] {
+  direction: rtl;
+  text-align: right;
+}
+
+html[lang="en"] {
+  direction: ltr;
+  text-align: left;
+}
+
+main {
+  width: 100%;
+  padding: 0;
+  color: var(--pcolor2,#8aa6a8);
+  min-height: Calc(100vh - 300px);
+  font-size: 16px;
+}
+
+footer {
+  background-color: var(--pcolor2, #8aa6a8);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: revert;
+  font-weight: revert;
+  line-height: normal;
+}
+
+button, input, select {
+  height: 45px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 2px 10px;
+  font-family: inherit;
+  border-radius: 0;
+  transition: all 0.4s;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 0 !important;
+}
+
+.background-primary {
+  background-color: var(--pcolor2);
+}
+
+.btn-primary {
+  background-color: var(--pcolor1);
+  transition: all 0.4s;
+}
+
+.line-height-2 {
+  line-height: 2;
+}
+
+.inner-width {
+  max-width: 1400px;
+}
+
+.montserrat-font {
+  font-family: 'Montserrat','Cairo';
+}
+
+.about-vector-animate .path {
+  animation: dashDasharray 6s cubic-bezier(0.06, 0.04, 1, -0.11);
+  animation-delay: 0.6s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes dashDasharray {
+  0% {
+      stroke: var(--pcolor1, #CEAD8C);
+      stroke-dasharray: 10;
+  }
+
+  70% {
+      stroke-dasharray: 400;
+      fill: transparent;
+      stroke-width: 1;
+  }
+
+  90% {
+  }
+
+  100% {
+      stroke: var(--pcolor1, #CEAD8C);
+  }
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  z-index: 3;
+  width: 31px !important;
+  height: 31px !important;
+  border-radius: 50%;
+  border: 1px solid #0a594d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  background-color: #ffffff5e;
+  transition: all 0.2s ease-in-out;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background-color: #0a594d;
+}
+
+.swiper-button-prev:hover::after,
+.swiper-button-next:hover::after {
+  color: #ffffff;
+}
+
+.swiper-button-prev::after {
+  content: ">";
+  font-size: 17px !important;
+  color: #0a594d;
+  opacity: .75;
+}
+
+.swiper-button-next::after {
+  content: "<";
+  font-size: 17px !important;
+  color: #0a594d;
+  opacity: .75;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--pcolor2, #8aa6a8);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #719ea1;
+}

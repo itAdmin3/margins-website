@@ -1,0 +1,113 @@
+{
+    "nav": {
+        "home": "Home",
+        "about": "About Us",
+        "projects": "Projects",
+        "progress": "Progress",
+        "progressItems": {
+          "project1": "OAKS",
+          "project2": "Zia",
+          "project3": "Sheraton Residences Website"
+        },
+        "news": "Our News",
+        "careers": "Careers",
+        "brokers": "Brokers",
+        "payment": "Online Payment",
+        "contact": "Contact Us",
+        "langaugeSwitcher": "عربي"
+    },
+    "home": {
+        "title": "Margins Developments",
+        "description": "Welcome!",
+        "projects": "projects",
+        "aboutSuperTitle": "About Us",
+        "aboutTitle": "Margins Developments",
+        "aboutDescription": "Upholding its reputation as an upcoming and progressive property developer, Margins Corporation for Development and Project Management was established to redefine and create impactful entities that base their success on innovation, up to date designs, safety approaches, and global standard construction systems.",  
+        "latestNews": "Our Latest News & Events",
+        "viewMore": "View more"
+    },
+    "projects": {
+      "title": "Our Projects"
+    },
+    "about": {
+      "superTitle": "Margins",
+      "title": "PAVING A NEW WAY",
+      "aboutSuperTitle": "About",
+      "aboutTitle": "Margins Developments",
+      "aboutDescription": {
+        "description1": "Upholding its reputation as an upcoming and progressive property developer, Margins Corporation for Development and Project Management was established to redefine and create impactful entities that base their success on innovation, up to date designs, safety approaches, and global standard construction systems.",
+        "description2": "Through a team of dedicated and quality expert architects, engineers, construction experts, and real estate professionals in the fields of development and contracting, Margins Developments had been established to envision and actualize sustainable human design solutions that sets the company apart from any competition as it has worked to be an exclusively integrative and globally certified entity.",
+        "description3": "Committed to delivering excellence through signature ‘health first’ buildings that promote personal wellbeing, environmental design awareness, and complete inclusivity, Margins promotes its distinctively designed buildings and spaces that endorse aesthetics, dynamism and are eco-friendly for its occupants and tenants"
+      },
+      "messageFrom": "message from the",
+      "chairman": "chairman",
+      "chairmanMessage": "We strive to be on the top of the field’s innovators, in every step we take, there’s always a plan that we want to collaborate with the pioneers in every field to ensure quality. That’s why we’re always hand in hand with auspicious international companies in every field to provide the customer in Egypt with remarkable international experience in all our projects.",
+      "ceo": "CEO",
+      "ceoMessage": "Providing quality with the safest measures is what every other developer thinks about while we, on the other hand, are giving our people a whole experience, we think about the tiniest detail in every design in order to make every project, the ideal project. The world is taking a different direction to establish sustainability in distinct projects, that’s the direction we’re bringing to our projects in Egypt."
+    },
+    "news": {
+      "tabs": {
+        "ourEvents": "Our Events",
+        "ourNews": "Our News"
+      }
+    },
+    "newsItem": {
+      "sharePost": "Share Post"
+    },
+    "project": {
+      "projectNewsTitle": "Project News",
+      "projectUnitTitle": "Project Units"
+    },
+    "careers": {
+      "title": "We hired people who are Always Passionate about what they do",
+      "subTitle": "If you are creative in one of the vital jobs, there is an opportunity to work within a professional framework."
+    },
+    "brokers": {
+      "title": "We are pleased with your partnership"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "subTitle": "Do you have any questions!"
+    },
+    "landingPage":{
+      "pleaseValidate": "Please validate your information first to spin the wheel",
+      "spin": "Spin",
+      "validateToSpin": "Validate to Spin",
+      "Submitting": "Submitting...",
+      "phone":"Your phone",
+      "name":"Your name",
+      "Cancel":"Cancel",
+      "userValidation":"User Validation",
+      "congratulations":"Congratulations! 🎉",
+      "congratulationsMessage":"You Won ",
+      "claimInstructions":"You will receive a WhatsApp message on your number with the prize collection details",
+      "close":"Close",
+      "validEmail":"Please enter a valid email",
+      "validPhone":"Please enter a valid phone number",
+      "validSucc":"Validation successful! You can now spin the wheel.",
+      "validFailed":"Validation failed. Please try again.",
+      "validError":"An error occurred. Please try again."
+    },
+    "footer": {
+      "contactUs": "Contact Us",
+      "address": {
+        "title": "Address",
+        "text": "Building 340, South 90 St., New Cairo, Egypt."
+      },
+      "phone": {
+        "title": "Phone",
+        "text": "16930"
+      },
+      "followUs": "Follow Us",
+      "copyrights": {
+        "text": "All copyright reserved ",
+        "year": "2024",
+        "company": ", MARGINS Developments LLC.."
+      },
+      "powerBy": {
+        "message": "Carefully crafted by ",
+        "companyName": " ScalWeb",
+        "icon": " ©"
+      }
+    }
+  }

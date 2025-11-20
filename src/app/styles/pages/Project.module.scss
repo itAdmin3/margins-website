@@ -1,0 +1,137 @@
+.wrapper {
+  .heading {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.5) 27%, rgba(0, 0, 0, 0) 65%);
+    background-repeat: no-repeat;
+    background-size: auto 400px;
+    background-position: center;
+  }
+  .hero-image {
+    animation: scaleDown 1s ease-in-out;
+    animation-delay: 0.5s;
+    height: 100vh;
+  }
+  .logo {
+    transform: scale(0.7);
+    animation: scaleUp 1s ease-in-out;
+    animation-delay: 0.5s;
+  }
+  .sticky-wrapper {
+    position: sticky;
+    // top: 89px;
+    align-self: start;
+    .address span {
+      transition: all 0.3s;
+      &:hover {
+        color: #00a3d5;
+      }
+    }
+  }
+  .banner {
+    background-color: #8aa6a8;
+    background-image: url("../../../../public/images/common/projects-banner.jpg");
+    background-size: cover;
+    background-position: center;
+    min-height: 240px;
+  }
+
+  .video-image {
+    position: relative !important;
+  }
+
+  .contact-info {
+    background-image: linear-gradient(var(--pcolor1, #8aa6a8), var(--pcolor3, #03464b));
+  }
+
+  .item {
+    position: relative;
+    transition: all 0.9s;
+    cursor: pointer;
+    .image-wrapper {
+      overflow: hidden;
+      max-height: 237px;
+      .image {
+        transition: all 0.9s;
+      }
+    }
+    .logo {
+      background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.41));
+      position: absolute;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+      padding-left: 20px;
+      padding-top: 80px;
+      padding-right: 20px;
+      padding-bottom: 35px;
+      flex-direction: column;
+      display: flex;
+      text-align: center;
+      align-items: center;
+      height: auto;
+      .image {
+        object-fit: contain;
+        width: 150px;
+      }
+    }
+    &:hover {
+      box-shadow: 2px 2px 30px rgba(0, 0, 0, 0.19);
+      .image-wrapper {
+        .image {
+          transform: rotate(-5deg) scale(1.2, 1.2);
+        }
+      }
+    }
+  }
+  .location {
+    position: relative !important;
+    width: 30px !important;
+  }
+  .contact-detail {
+    transition: all 0.4s;
+    &:hover {
+      background-color: var(--pcolor3, #03464b);
+    }
+  }
+
+  .facility-image {
+    position: relative !important;
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .projectUnits {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .tab-item {
+    font-size: 14px;
+  }
+  .tab-active {
+    background-color: #8ba6a8;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+  }
+}
+
+@keyframes scaleDown {
+  0% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(0.6);
+  }
+
+  100% {
+    transform: scale(0.7);
+  }
+}
