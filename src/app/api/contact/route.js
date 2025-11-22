@@ -84,6 +84,10 @@ export async function POST(req) {
         error: "Name and phone are required" 
       }, { status: 400 });
     }
+    
+    // Extract page source and project ID for tracking
+    const pageSource = body.pageSource || "general";
+    const projectId = body.projectId || null;
 
     // Validate email format (only if provided)
     if (body.email && !validateEmail(body.email)) {
@@ -122,7 +126,7 @@ export async function POST(req) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.API_CONTACT_FORM}`,
       },
-      body: JSON.stringify({ data: { title: "Website Inquiry", name: body.name, phone: `${body.country}-${body.phone}`, unitType: body.unitType, message: body.message } }),
+      body: JSON.stringify({ data: { title: `Website Inquiry - ${pageSource}`, name: body.name, phone: `${body.country}-${body.phone}`, unitType: body.unitType, message: body.message } }),
     });
 
     const responseData = await response.json();
@@ -145,11 +149,12 @@ export async function POST(req) {
       country_code: body.country, 
       phone: body.phone, 
       email: body.email, 
-      subject: "Website Message", 
+      subject: `Website Message - ${pageSource}`, 
       body: body.message, 
-      project_id: null, 
+      project_id: projectId, 
       campaign_id: null, 
       medium: medium,
+      page_source: pageSource,
     });
     // console.log(lead);
 
