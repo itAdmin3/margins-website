@@ -7,7 +7,7 @@ const SocialLinks = () => {
   return (
     <div className={`fixed top-1/2 transform -translate-y-1/2 space-y-2 z-50 ${i18n.language === "en" ? "right-4" : "left-4"}`}>
       {/* WhatsApp */}
-      <a href="https://wa.me/201288595569" target="_blank" rel="noopener noreferrer" className="flex bg-green-700 text-white p-3 rounded-full shadow-lg hover:bg-green-800 transition">
+      <a href="https://wa.me/201288595565" target="_blank" rel="noopener noreferrer" className="flex bg-green-700 text-white p-3 rounded-full shadow-lg hover:bg-green-800 transition">
         <FaWhatsapp size={22} className="text-white" />
       </a>
 

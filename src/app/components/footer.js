@@ -90,7 +90,7 @@ const Footer = () => {
                   </svg>
                 </a>
                 <a
-                  href="https://api.whatsapp.com/send/?phone=201288595569&text&type=phone_number&app_absent=0"
+                  href="https://api.whatsapp.com/send/?phone=201288595565&text&type=phone_number&app_absent=0"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-[40px] h-[40px] flex justify-center rounded-sm p-1 border-gray-300 transition-all duration-500 hover:border-gray-100 hover:bg-green-500"
